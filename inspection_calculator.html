@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>驗貨計算器</title>
+    <style>
+        * {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 40px 20px;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f4f6f8;
+    color: #333;
+}
+
+body > h1,
+body > label,
+body > input,
+body > button,
+body > h2,
+body > p {
+    display: block;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Title */
+h1 {
+    margin-bottom: 30px;
+    text-align: center;
+    color: #222;
+    font-size: 32px;
+}
+
+/* Input label */
+label {
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #555;
+}
+
+/* Input */
+input {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    background: white;
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input:focus {
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
+}
+
+input::placeholder {
+    color: #9ca3af;
+}
+
+/* Button */
+button {
+    width: 100%;
+    margin-top: 15px;
+    padding: 14px;
+    border: none;
+    border-radius: 8px;
+    background: #4f46e5;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+}
+
+button:hover {
+    background: #4338ca;
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+/* Result section */
+h2 {
+    margin-top: 40px;
+    margin-bottom: 15px;
+    font-size: 22px;
+    color: #222;
+}
+
+/* Result cards */
+p {
+    margin-top: 0;
+    margin-bottom: 10px;
+    padding: 15px 18px;
+    background: white;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+    font-size: 16px;
+}
+
+/* Result numbers */
+p span {
+    float: right;
+    font-weight: 700;
+    color: #4f46e5;
+}
+
+/* Total */
+#total {
+    color: #16a34a;
+    font-size: 18px;
+}
+    </style>
+</head>
+
+<body>
+    <h1>Inspection calculator</h1>
+    <label for="input1">輸入單量, 英文逗號隔開</label>
+    <input type="list" id="input1" class="orderList" placeholder="输入单量, 英文逗号隔开">
+    <button id="calculateBtn">計算</button>
+    <h2>結果</h2>
+    <p>總單量: <span id="orderCount"></span></p>
+    <p>30元扣除單量: <span id="amount30"></span></p>
+    <p>30元扣除金額: <span id="amount30Total"></span></p>
+    <p>60元扣除單量: <span id="amount60"></span></p>
+    <p>60元扣除金額: <span id="amount60Total"></span></p>
+    <p>總金額: <span id="total"></span></p> 
+
+</body>
+
+<script>
+    document.getElementById('calculateBtn').addEventListener('click', function () {
+        const input1 = document.getElementById('input1').value;
+        const orders = input1.split(',').map(item => parseFloat(item.trim()));
+        let deduction30 = []
+        let deduction60 = []
+
+        for (let i = 0; i < orders.length; i++) {
+            if (orders[i] >= 3) {
+                deduction60.push(orders[i] - 2)
+                deduction30.push(1)
+            } else if (orders[i] === 2) {
+                deduction30.push(orders[i] - 1)
+            }
+
+        }
+
+        console.log('deduction30:', deduction30)
+        console.log('deduction60:', deduction60)
+
+        let total = 0
+        let orderCount = 0
+        let amount30 = 0
+        let amount60 = 0
+        for (let i = 0; i < orders.length; i++) {
+            orderCount += orders[i]
+            total += orders[i] * 60
+        }
+
+
+        for (let i = 0; i < deduction30.length; i++) {
+            total -= deduction30[i] * 30
+            amount30 += deduction30[i]
+        }
+        for (let i = 0; i < deduction60.length; i++) {
+            total -= deduction60[i] * 60
+            amount60 += deduction60[i]
+        }
+        document.getElementById('orderCount').textContent = orderCount;
+        document.getElementById('amount30').textContent = amount30;
+        document.getElementById('amount60').textContent = amount60;
+        document.getElementById('total').textContent = total;
+        document.getElementById('amount30Total').textContent = amount30 * 30;
+        document.getElementById('amount60Total').textContent = amount60 * 60;
+
+    });
+
+</script>
+
+</html>
